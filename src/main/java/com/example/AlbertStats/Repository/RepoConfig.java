@@ -1,14 +1,10 @@
 package com.example.AlbertStats.Repository;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
 import java.sql.Driver;
@@ -17,24 +13,22 @@ import java.sql.Driver;
 @Configuration //Define our beans
 @ComponentScan("com.example.AlbertStats.Repository")//tell spring where to find our definition of beans
 public class RepoConfig {
-    @Value("${}")
+    @Value("${spring.datasource.url}")
     private String URL;
-    @Value("${}")
+    @Value("${spring.datasource.user}")
     private String USER;
-    @Value("${}")
-    private String DRIVER;
-    @Value("${}")
+    @Value("${spring.datasource.password}")
     private String PASSWORD;
 
 
     @Bean
     public DataSource dataSourceMySQL() {//get our basic details to connect to our MYSQL database
-        DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
-        driverManagerDataSource.setUrl(URL);
-        driverManagerDataSource.setUsername(USER);
-        driverManagerDataSource.setDriverClassName(DRIVER);
-        driverManagerDataSource.setPassword(PASSWORD);
-        return driverManagerDataSource;
+        HikariDataSource dataSource = new HikariDataSource();
+        dataSource.setUsername(USER);
+        dataSource.setPassword(PASSWORD);
+        dataSource.setJdbcUrl(URL);
+        dataSource.setConnectionTimeout(1000);
+        return dataSource;
     }
     @Bean
     public JdbcTemplate mySQLtemplate(DataSource dataSourceMySql) {//get dataSourceMySql comes directly from our bean uptop
