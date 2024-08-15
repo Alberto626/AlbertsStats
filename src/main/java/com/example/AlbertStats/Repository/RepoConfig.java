@@ -13,9 +13,10 @@ import java.sql.Driver;
 @Configuration //Define our beans
 @ComponentScan("com.example.AlbertStats.Repository")//tell spring where to find our definition of beans
 public class RepoConfig {
+    //TODO add secrets management later, i don't want key details on a application.properties
     @Value("${spring.datasource.url}")
     private String URL;
-    @Value("${spring.datasource.user}")
+    @Value("${spring.datasource.username}")
     private String USER;
     @Value("${spring.datasource.password}")
     private String PASSWORD;
@@ -32,7 +33,7 @@ public class RepoConfig {
     }
     @Bean
     public JdbcTemplate mySQLtemplate(DataSource dataSourceMySql) {//get dataSourceMySql comes directly from our bean uptop
-        return new JdbcTemplate(dataSourceMySql);
+        return new JdbcTemplate(dataSourceMySql);//NOTES, this wont finish until data source is finished
     }
 
 }

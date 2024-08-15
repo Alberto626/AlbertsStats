@@ -9,8 +9,8 @@ import java.util.List;
 @Repository
 public class Dota2Repo implements BasicRepository {
 
-    private JdbcTemplate mySqlJdbcTemplate;
-    public Dota2Repo(@Autowired JdbcTemplate mySqlJdbcTemplate) {//get JDBC template from RepoConfig file
+    private final JdbcTemplate mySqlJdbcTemplate;
+    public Dota2Repo(JdbcTemplate mySqlJdbcTemplate) {//get JDBC template from RepoConfig file
         this.mySqlJdbcTemplate = mySqlJdbcTemplate;
     }
     @Override
