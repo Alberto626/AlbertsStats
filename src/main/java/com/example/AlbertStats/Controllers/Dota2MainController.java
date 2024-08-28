@@ -9,6 +9,7 @@ public class Dota2MainController {
 
     @GetMapping("Dota")
     public String get(Model model) {
+        model.addAttribute("This", null);
         return "";
     }
 }

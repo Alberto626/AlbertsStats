@@ -31,4 +31,7 @@ public class Dota2Repo implements BasicRepository {
     public List<?> getAll() {
         return null;
     }
+    public void createTable() { //This will be for direct usage
+        String sql = "CREATE ";
+    }
 }

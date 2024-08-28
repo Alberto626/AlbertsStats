@@ -2,11 +2,10 @@ package com.example.AlbertStats.Scheduler;
 
 import com.example.AlbertStats.Repository.Dota2Repo;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
+
 
 @Component
 public class Dota2ApiScheduler {//Basic concept, still not finished
@@ -20,20 +19,16 @@ public class Dota2ApiScheduler {//Basic concept, still not finished
         this.dota2Repo = dota2Repo;
         this.rest = rest;
     }
-    @Scheduled(cron = "0 */5 * ? * *") //every 5 minutes
-    public void callAPI() {
-
+    //TODO
+    public void databaseChecking() {//I want to call the api and make sure the application is up to date
+        //Step one, create database table if not create
+        //step two, make sure database is up to date, havent figured out method yet, most likely check latest in the api call and latest in database, and check last index in from the database,
+        //https://api.opendota.com/api/players/111477708/matches
+        //Step three, if all up to date, this method is done,
+        //step four, if not up
     }
-    @Scheduled
-    public void isDatabaseEmpty() {//one time use when starting application
-
-    }
-    private List<?> callApi() {//this will grab every data from the database
-        return null;
-    }
-    private boolean compareData() {//compare the api information and with database useing jdbc
+    public boolean isLatestTheSame() {
         return true;
     }
-    private void addData() { //add to our Database ONLY after we compare
-    }
+
 }
