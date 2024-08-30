@@ -7,7 +7,6 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -15,30 +14,38 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @Service
-public class ReadJsonFilesService {
+public class JsonFilesToListService {
     @Value("classpath:data/heroes.json")
     private Resource heroes;
     @Value("classpath:data/items.json")
     private Resource items;
-    private final Logger logger = Logger.getLogger(ReadJsonFilesService.class.getName());
+    private final Logger logger = Logger.getLogger(JsonFilesToListService.class.getName());
 
-    @PostConstruct //purely for testing reasons
-    public void readJson() {
+    public List<Hero> listOfHeroes() {
         try {
             JsonNode heroesNode = new ObjectMapper().readTree(heroes.getFile());
-            JsonNode itemsNode = new ObjectMapper().readTree(items.getFile());
-
             Iterator<JsonNode> iterator = heroesNode.elements();
-            Iterator<JsonNode> iterator1 = itemsNode.elements();
-
-            List<Hero> heroes = listOfHeroes(iterator);
-            List<Item> items = listOfItems(iterator1);
+            List<Hero> heroes = jsonToHeroes(iterator);
+            return heroes;
         }
         catch (IOException e) {
-            //TODOdo something
+            logger.info("Cannot read from File");
         }
+        return null;
     }
-    private List<Hero> listOfHeroes(Iterator iterator) {
+    public List<Item> listOfItems() {
+        try {
+            JsonNode itemsNode = new ObjectMapper().readTree(items.getFile());
+            Iterator<JsonNode> iterator1 = itemsNode.elements();
+            List<Item> items = jsonToItems(iterator1);
+            return items;
+        }
+        catch (IOException e) {
+            logger.info("Cannot read from Items.json");
+        }
+        return null;
+    }
+    private List<Hero> jsonToHeroes(Iterator iterator) {
         List<Hero> heroes = new ArrayList<>();
         while(iterator.hasNext()) {
             JsonNode current = (JsonNode) iterator.next();
@@ -57,10 +64,9 @@ public class ReadJsonFilesService {
             }
             heroes.add(hero);
         }
-        logger.info(heroes.get(heroes.size() -1).toString());
         return heroes;
     }
-    private List<Item> listOfItems(Iterator iterator) {
+    private List<Item> jsonToItems(Iterator iterator) {
         List<Item> items = new ArrayList<>();
         while(iterator.hasNext()) {
             JsonNode current = (JsonNode) iterator.next();
@@ -70,10 +76,20 @@ public class ReadJsonFilesService {
             if(current.has("dname")) { //one of the items does not have this a dname for some reason
                 item.setName(current.get("dname").asText());
             }
-            JsonNode
-            logger.info(item.toString());
+            else {
+                item.setName("NO NAME");
+            }
+
+            String description = "NO DESCRIPTION";
+            if(current.has("abilities") && current.get("abilities").isArray()) {
+                for(JsonNode j: current.get("abilities")) {
+                    description = j.get("description").asText();
+                }
+            }
+            item.setDescription(description);
+            items.add(item);
         }
-        return null;
+        return items;
     }
 }
 
