@@ -7,8 +7,6 @@ import com.example.AlbertStats.Scheduler.JsonReading.Item;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import javax.xml.crypto.Data;
 import java.util.List;
 
 @Repository
@@ -27,7 +25,7 @@ public class Dota2Repo implements BasicRepository {
         String sql = "Insert into dota2.items values (?,?,?,?)";
         mySqlJdbcTemplate.update(sql, item.getId(), item.getName(), item.getDescription(), item.getCost());
     }
-    public void replaceHero(Hero hero) {
+    public void replaceHero(Hero hero) { //TODO
         String sql = "INSERT into dota2.heroes values (?, ?, ?, ?) ON DUPLICATE KEY UPDATE "; //TODO DO THIS
     }
     public void replaceItem(Item item) {
@@ -51,21 +49,21 @@ public class Dota2Repo implements BasicRepository {
     public List<Item> getAllItems() {
         String sql = "Select * from dota2.items";
         List<Item> items = mySqlJdbcTemplate.query(sql, new ItemRowMapper());
-        return null;
+        return items;
     }
-    public boolean HeroRecordsExists() {
+    public boolean doesHeroRecordsExists() {
         try {
-            String sql = "Select * from dota2.heroes where id = 1";
+            String sql = "Select * from dota2.heroes LIMIT 1";
             Hero hero = mySqlJdbcTemplate.queryForObject(sql, new HeroRowMapper());
         }
-        catch (DataAccessException e) {
+        catch (DataAccessException e) { //if we get no record then return false
             return false;
         }
         return true;
     }
-    public boolean ItemRecordsExists() {// check if the latest item is okay
+    public boolean doesItemRecordsExists() {// check if the latest item is okay
         try {
-            String sql = "Select * from dota2.items where id = 1";
+            String sql = "Select * from dota2.items LIMIT 1";
             Item item = mySqlJdbcTemplate.queryForObject(sql, new ItemRowMapper());
         }
         catch (DataAccessException e) {
@@ -73,7 +71,7 @@ public class Dota2Repo implements BasicRepository {
         }
         return true;
     }
-    public String listToString(List<String> list) { //TODO check, this function might need to be its own separate class
+    private String listToString(List<String> list) { //TODO check, this function might need to be its own separate class
         StringBuilder stringbuilder = new StringBuilder();
         for(String x: list) {
             stringbuilder.append(x + ",");
