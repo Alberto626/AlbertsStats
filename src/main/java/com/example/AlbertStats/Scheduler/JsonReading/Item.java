@@ -1,5 +1,7 @@
 package com.example.AlbertStats.Scheduler.JsonReading;
 
+import java.util.Objects;
+
 public class Item {
     private int id;
     private String name;
@@ -36,6 +38,23 @@ public class Item {
 
     public void setCost(int cost) {
         this.cost = cost;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Item item = (Item) o;
+        return id == item.id && cost == item.cost && Objects.equals(name, item.name) && Objects.equals(description, item.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, cost);
     }
 
     @Override

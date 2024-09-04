@@ -1,6 +1,7 @@
 package com.example.AlbertStats.Scheduler.JsonReading;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Hero {
     private int id;
@@ -38,6 +39,23 @@ public class Hero {
 
     public void setRoles(List<String> roles) {
         this.roles = roles;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Hero hero = (Hero) o;
+        return id == hero.id && Objects.equals(name, hero.name) && Objects.equals(primaryAttribute, hero.primaryAttribute) && Objects.equals(roles, hero.roles);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, primaryAttribute, roles);
     }
 
     @Override
