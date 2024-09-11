@@ -1,9 +1,11 @@
 package com.example.AlbertStats.Services;
 
 import com.example.AlbertStats.Repository.Dota2Repo;
-import com.example.AlbertStats.Scheduler.JsonReading.Hero;
-import com.example.AlbertStats.Scheduler.JsonReading.Item;
+import com.example.AlbertStats.Entities.Hero;
+import com.example.AlbertStats.Entities.Item;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.logging.Logger;
 
 @Service
@@ -23,19 +25,21 @@ public class DotaDataComparisonService {
         }
         return false;
     }
-
+    public void updateHeroes() {
+        for(Hero hero: readJsonFilesService.getHeroes()) {
+            dota2Repo.replaceHero(hero);
+        }
+    }
+    public void updateItems() {
+        for(Item item: readJsonFilesService.getItems()) {
+            dota2Repo.replaceItem(item);
+        }
+    }
     public boolean isLatestItemCurrent() {
         if(latestJsonItem().equals(latestMySqlItem())) {
             return true;
         }
         return false;
-    }
-    public boolean areHeroRecordsCurrent() {//TODO might need to change methods to return list of needed updated records
-        return false;
-    }
-    public boolean areItemRecordsCurrent() {
-        return false;
-
     }
     public boolean hasHeroRecords() { //THis is supposed to check if any records at all in the database because
         return hasHeroRecords();

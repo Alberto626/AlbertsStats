@@ -1,7 +1,7 @@
 package com.example.AlbertStats.Services;
 
-import com.example.AlbertStats.Scheduler.JsonReading.Hero;
-import com.example.AlbertStats.Scheduler.JsonReading.Item;
+import com.example.AlbertStats.Entities.Hero;
+import com.example.AlbertStats.Entities.Item;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;

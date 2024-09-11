@@ -1,4 +1,4 @@
-package com.example.AlbertStats.Scheduler.JsonReading;
+package com.example.AlbertStats.Entities;
 
 import java.util.List;
 import java.util.Objects;

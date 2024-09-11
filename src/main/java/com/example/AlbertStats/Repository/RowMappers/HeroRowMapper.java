@@ -1,6 +1,6 @@
 package com.example.AlbertStats.Repository.RowMappers;
 
-import com.example.AlbertStats.Scheduler.JsonReading.Hero;
+import com.example.AlbertStats.Entities.Hero;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

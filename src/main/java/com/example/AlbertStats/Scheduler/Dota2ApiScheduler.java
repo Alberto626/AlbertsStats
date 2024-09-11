@@ -15,6 +15,7 @@ public class Dota2ApiScheduler {//Basic concept, still not finished
     private final RestTemplate rest;
     private String accountId;
     private final DotaDataComparisonService dotaDataComparisonService;
+
     public Dota2ApiScheduler(Dota2Repo dota2Repo,
                              RestTemplate rest,
                              @Value("${dota2.accountId}") String accountId,
@@ -23,25 +24,13 @@ public class Dota2ApiScheduler {//Basic concept, still not finished
         this.rest = rest;
         this.accountId = accountId;
         this.dotaDataComparisonService = dotaDataComparisonService;
-
     }
     //TODO
-    public void databaseChecking() {
-        if(dotaDataComparisonService.hasItemRecords()) {//if we have some records, then we might need to update, so i want to compare the data
-
-        }
-        else {
-            //TODO ADD THE DATA, if no records are found
-        }
-        if(dotaDataComparisonService.hasHeroRecords()) {
-
-        }
-        else {
-
-        }
+    public void updateHeroesToDatabase() {//update heroes to our database every once in a while
+        dotaDataComparisonService.updateHeroes();
     }
-    public boolean isLatestTheSame() {
-        return true;
+    public void updateItemsToDatabase() {//this will update items when its empty every once in a while
+        dotaDataComparisonService.updateItems();
     }
 
 }

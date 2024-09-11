@@ -2,8 +2,8 @@ package com.example.AlbertStats.Repository;
 
 import com.example.AlbertStats.Repository.RowMappers.HeroRowMapper;
 import com.example.AlbertStats.Repository.RowMappers.ItemRowMapper;
-import com.example.AlbertStats.Scheduler.JsonReading.Hero;
-import com.example.AlbertStats.Scheduler.JsonReading.Item;
+import com.example.AlbertStats.Entities.Hero;
+import com.example.AlbertStats.Entities.Item;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -25,11 +25,15 @@ public class Dota2Repo implements BasicRepository {
         String sql = "Insert into dota2.items values (?,?,?,?)";
         mySqlJdbcTemplate.update(sql, item.getId(), item.getName(), item.getDescription(), item.getCost());
     }
-    public void replaceHero(Hero hero) { //TODO
-        String sql = "INSERT into dota2.heroes values (?, ?, ?, ?) ON DUPLICATE KEY UPDATE "; //TODO DO THIS
+    public void replaceHero(Hero hero) {
+        String sql = "INSERT into dota2.heroes values (?, ?, ?, ?)" +
+                " ON DUPLICATE KEY UPDATE id=VALUES(id), name=VALUES(name), primary_attribute=VALUES(primary_attribute), roles=VALUES(roles)"; //TODO DO THIS https://stackoverflow.com/questions/15773167/prepared-statement-syntax-for-on-duplicate-key-update-number-of-params-error
+        mySqlJdbcTemplate.update(sql, hero.getId(), hero.getName(), hero.getPrimaryAttribute(), listToString(hero.getRoles()));
     }
     public void replaceItem(Item item) {
-        String sql = ""; //TODO
+        String sql = "Insert into dota2.items values (?, ?, ?, ?)" +
+                " ON DUPLICATE KEY UPDATE id=VALUES(id), name=VALUES(name), description=VALUES(description), cost=VALUES(cost) ";
+        mySqlJdbcTemplate.update(sql, item.getId(), item.getName(), item.getDescription(), item.getCost());
     }
     public Hero getLatestHero() {
         String sql = "Select * from dota2.heroes order by id DESC LIMIT 1"; //grab the last record TODO find if theres a more efficient way of find it
