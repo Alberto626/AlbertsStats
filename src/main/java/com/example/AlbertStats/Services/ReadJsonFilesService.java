@@ -72,7 +72,9 @@ public class ReadJsonFilesService {
             hero.setId(current.get("id").asInt());
             hero.setName(current.get("localized_name").asText());
             hero.setPrimaryAttribute(current.get("primary_attr").asText());
-
+            if(hero.getPrimaryAttribute().equals("all")) {//TODO this can be replaced as a tenary
+                hero.setPrimaryAttribute("uni");
+            }
             JsonNode roles = current.get("roles");
             List<String> l = new ArrayList<>();
             if(roles.isArray()) {
@@ -99,11 +101,35 @@ public class ReadJsonFilesService {
                 item.setName("NO NAME");
             }
 
-            String description = "NO DESCRIPTION";
-            if(current.has("abilities") && current.get("abilities").isArray()) {
+            String description = "";
+            if(current.has("abilities")
+                    && current.get("abilities").isArray()
+                    && !current.get("abilities").isEmpty()
+            ) {
                 for(JsonNode j: current.get("abilities")) {
                     description = j.get("description").asText().replace("\n", "");//remove all \n letters
                 }
+            }
+            else if(current.has("attrib")
+                    && current.get("attrib").isArray()
+                    && !current.get("attrib").isEmpty()) {
+                StringBuilder builder = new StringBuilder("");
+                for (JsonNode j: current.get("attrib")) {
+                    String value = j.get("value").asText();
+                    String display = "";
+                    if(j.has("display")) {
+                        display = j.get("display").asText();
+                        display = display.replace("{value}", value);
+                    }
+                    else {
+                        display = value + j.get("key").asText();
+                    }
+                    builder.append(display + "   ");
+                }
+                description = builder.toString();
+            }
+            else {
+                description = "NO DESCRIPTION";
             }
             item.setDescription(description);
             items.add(item);

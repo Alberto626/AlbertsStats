@@ -2,13 +2,14 @@ package com.example.AlbertStats.Scheduler;
 
 import com.example.AlbertStats.Repository.Dota2Repo;
 import com.example.AlbertStats.Services.DotaDataComparisonService;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 
 
-@Component //TODO change to service after reading more about it
+@Component //TODO this might be a service
 public class Dota2ApiScheduler {//Basic concept, still not finished
 
     private final Dota2Repo dota2Repo;
@@ -25,10 +26,11 @@ public class Dota2ApiScheduler {//Basic concept, still not finished
         this.accountId = accountId;
         this.dotaDataComparisonService = dotaDataComparisonService;
     }
-    //TODO
+    @PostConstruct
     public void updateHeroesToDatabase() {//update heroes to our database every once in a while
         dotaDataComparisonService.updateHeroes();
     }
+    @PostConstruct
     public void updateItemsToDatabase() {//this will update items when its empty every once in a while
         dotaDataComparisonService.updateItems();
     }
