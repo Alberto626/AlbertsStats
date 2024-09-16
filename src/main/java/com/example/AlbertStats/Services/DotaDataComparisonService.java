@@ -25,6 +25,12 @@ public class DotaDataComparisonService {
         }
         return false;
     }
+    public boolean isLatestItemCurrent() {
+        if(latestJsonItem().equals(latestMySqlItem())) {
+            return true;
+        }
+        return false;
+    }
     public void updateHeroes() {
         for(Hero hero: readJsonFilesService.getHeroes()) {
             dota2Repo.replaceHero(hero);
@@ -34,12 +40,6 @@ public class DotaDataComparisonService {
         for(Item item: readJsonFilesService.getItems()) {
             dota2Repo.replaceItem(item);
         }
-    }
-    public boolean isLatestItemCurrent() {
-        if(latestJsonItem().equals(latestMySqlItem())) {
-            return true;
-        }
-        return false;
     }
     public boolean hasHeroRecords() { //THis is supposed to check if any records at all in the database because
         return hasHeroRecords();

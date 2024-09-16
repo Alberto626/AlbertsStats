@@ -20,7 +20,7 @@ public class SchedulerConfig {
                 .build();
     }
     @Bean
-    public RestTemplate restTemplate() {//basic idea
+    public RestTemplate restTemplate() {//this is deprecated but can be also used for a learning experience
         return new RestTemplate();
     }
 }

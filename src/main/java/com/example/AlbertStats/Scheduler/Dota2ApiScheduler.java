@@ -26,11 +26,11 @@ public class Dota2ApiScheduler {//Basic concept, still not finished
         this.accountId = accountId;
         this.dotaDataComparisonService = dotaDataComparisonService;
     }
-    @PostConstruct
+
     public void updateHeroesToDatabase() {//update heroes to our database every once in a while
         dotaDataComparisonService.updateHeroes();
     }
-    @PostConstruct
+
     public void updateItemsToDatabase() {//this will update items when its empty every once in a while
         dotaDataComparisonService.updateItems();
     }
