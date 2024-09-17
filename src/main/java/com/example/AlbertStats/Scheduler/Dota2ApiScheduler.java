@@ -31,7 +31,7 @@ public class Dota2ApiScheduler {//Basic concept, still not finished
         dotaDataComparisonService.updateHeroes();
     }
 
-    public void updateItemsToDatabase() {//this will update items when its empty every once in a while
+    public void updateItemsToDatabase() {//Read from my json file and update to the mysql database
         dotaDataComparisonService.updateItems();
     }
 

@@ -3,7 +3,7 @@ package com.example.AlbertStats.Entities;
 import java.math.BigInteger;
 import java.util.List;
 
-public class MatchDetails {
+public class MatchDetails {//This will something from View in mySQL
     private int id;
     private BigInteger matchId; //TODO check if needs to be changed to long or BigLong
     private boolean radiantVictory;

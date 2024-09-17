@@ -1,5 +1,7 @@
 package com.example.AlbertStats.Repository;
 
+import com.example.AlbertStats.Entities.MatchDetails;
+import com.example.AlbertStats.Entities.PlayerDetails;
 import com.example.AlbertStats.Repository.RowMappers.HeroRowMapper;
 import com.example.AlbertStats.Repository.RowMappers.ItemRowMapper;
 import com.example.AlbertStats.Entities.Hero;
@@ -64,6 +66,21 @@ public class Dota2Repo implements BasicRepository {
             return false;
         }
         return true;
+    }
+    public void addPlayerDetails() {
+        String sql = "Insert into dota2.player_match_details(match_id, " +
+                "player_name, " +
+                "hero_id, " +
+                "is_radiant, " +
+                "net_worth, player_slot," +
+                "kills, deaths, assists, hero_level, hero_damage, tower_damage," +
+                "item_0_id, item_1_id, item_2_id, item_3_id, item_4_id, item_5_id," +
+                "backpack_id_0, backpack_id_1, backpack_id_2, item_neutral) VALUES" +
+                "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"; //22 questions marks
+
+    }
+    public void addMatchDetails(MatchDetails matchDetails) {
+        String sql = "";
     }
     public boolean doesItemRecordsExists() {// check if the latest item is okay
         try {

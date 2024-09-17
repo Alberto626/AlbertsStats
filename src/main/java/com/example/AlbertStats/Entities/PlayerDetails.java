@@ -2,7 +2,7 @@ package com.example.AlbertStats.Entities;
 
 import java.util.List;
 
-public class PlayerDetails {
+public class PlayerDetails {//This will be View from mySQL, while this can technically be a entity as it represents a column from the table, it holds alot of foreign keys
     private int id;
     private int matchId;//TODO check if this needs changing
     private String playerName;
