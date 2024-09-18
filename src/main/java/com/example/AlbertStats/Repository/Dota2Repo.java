@@ -1,5 +1,6 @@
 package com.example.AlbertStats.Repository;
 
+import com.example.AlbertStats.DTOs.PlayerMatchDetailsDTO;
 import com.example.AlbertStats.Entities.MatchDetails;
 import com.example.AlbertStats.Entities.PlayerDetails;
 import com.example.AlbertStats.Repository.RowMappers.HeroRowMapper;
@@ -67,7 +68,7 @@ public class Dota2Repo implements BasicRepository {
         }
         return true;
     }
-    public void addPlayerDetails() {
+    public void addPlayerDetails(PlayerMatchDetailsDTO playerMatchDetailsDTO) { //it needs the dto because it has the foreign keys
         String sql = "Insert into dota2.player_match_details(match_id, " +
                 "player_name, " +
                 "hero_id, " +

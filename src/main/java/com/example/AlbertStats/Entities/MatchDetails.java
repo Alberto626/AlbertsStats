@@ -1,20 +1,18 @@
 package com.example.AlbertStats.Entities;
 
 import java.math.BigInteger;
-import java.util.List;
 
 public class MatchDetails {//This will something from View in mySQL
-    private int id;
-    private BigInteger matchId; //TODO check if needs to be changed to long or BigLong
+    private BigInteger id;
+    private BigInteger matchId;
     private boolean radiantVictory;
     private int matchDuration; //this is measured in seconds, might convert for later
-    private List<PlayerDetails> playerDetails;
 
-    public int getId() {
+    public BigInteger getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(BigInteger id) {
         this.id = id;
     }
 
@@ -42,11 +40,13 @@ public class MatchDetails {//This will something from View in mySQL
         this.matchDuration = matchDuration;
     }
 
-    public List<PlayerDetails> getPlayerDetails() {
-        return playerDetails;
-    }
-
-    public void setPlayerDetails(List<PlayerDetails> playerDetails) {
-        this.playerDetails = playerDetails;
+    @Override
+    public String toString() {
+        return "MatchDetails{" +
+                "id=" + id +
+                ", matchId=" + matchId +
+                ", radiantVictory=" + radiantVictory +
+                ", matchDuration=" + matchDuration +
+                '}';
     }
 }

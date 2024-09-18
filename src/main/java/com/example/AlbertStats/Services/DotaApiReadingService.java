@@ -1,16 +1,19 @@
 package com.example.AlbertStats.Services;
 
+import com.example.AlbertStats.DTOs.PlayerMatchDetailsDTO;
+import com.example.AlbertStats.Entities.MatchDetails;
 import com.example.AlbertStats.Repository.Dota2Repo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+
+import java.math.BigInteger;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -28,12 +31,12 @@ public class DotaApiReadingService {
         this.playerID = playerID;
         this.dota2Repo = dota2Repo;
     }
-    public List<Long> readAllMatches() {//get all match ids
+    public List<BigInteger> readAllMatches() {//get all match ids
         try {
             ResponseEntity<String> response = restTemplate
                     .getForEntity("https://api.opendota.com/api/players/" + playerID +"/matches", String.class);
             JsonNode node = new ObjectMapper().readTree(response.getBody());
-            List<Long> matchIDs = getAllMatchesIDs(node.elements());
+            List<BigInteger> matchIDs = getAllMatchesIDs(node.elements());
             logger.info("" +matchIDs.size());
             return matchIDs;
         }
@@ -44,26 +47,24 @@ public class DotaApiReadingService {
         }
         return null;
     }
-    private List<Long> getAllMatchesIDs(Iterator<JsonNode> elements) {
-        Stack<Long> stack = new Stack<>();
+    private List<BigInteger> getAllMatchesIDs(Iterator<JsonNode> elements) {
+        Stack<BigInteger> stack = new Stack<>();
         while(elements.hasNext()) {
             JsonNode currentNode = elements.next();
-            long matchId = currentNode.get("match_id").asLong();
+            BigInteger matchId = new BigInteger(currentNode.get("match_id").asText());
             stack.push(matchId);
         }
         return stack;
     }
-    @PostConstruct
-    public void readMatchDetails() {//TODO parameter might be either string or long
-        long matchId = 0;
+    public void readMatchDetails(BigInteger matchId) {//TODO parameter might be either string or long
         try {
             ResponseEntity<String> response =restTemplate
                     .getForEntity("https://api.opendota.com/api/matches/" + matchId, String.class);
             if(!response.getStatusCode().is2xxSuccessful()) {//if our response is not a 200 then we got a problem to deal with
                 throw new RestClientException("This aint a 200 status code");
             }
-            JsonNode node = new ObjectMapper().readTree(response.getBody());
-            mapDetails(node, matchId);
+            JsonNode node = new ObjectMapper().readTree(response.getBody());//This is the
+            addMatchDetails(node, matchId);
 
         }
         catch (JsonMappingException e) {//TODO write how to handle exceptions
@@ -72,40 +73,73 @@ public class DotaApiReadingService {
             logger.info("processing exception ain't working");
         }
         catch(RestClientException e) {
-            logger.info("rest template exception" + e.toString());
+            logger.info("rest template exception" + e);
         }
     }
-    private void mapDetails(JsonNode node, long matchId) {//this will map all the details of our response to mysql
-        Iterator<JsonNode> iterator = node.elements();
+    private void addMatchDetails(JsonNode node, BigInteger matchId) {//this will map all the details of our response to mysql
+        MatchDetails matchDetails = new MatchDetails();
+        int duration = node.get("duration").asInt();
+        boolean radiantVictory = node.get("radiant_win").asBoolean();
+        //id will be auto incremented
+        matchDetails.setRadiantVictory(radiantVictory);
+        matchDetails.setMatchDuration(duration);
+        matchDetails.setMatchId(matchId);
+        dota2Repo.addMatchDetails(matchDetails);
+
+        addPlayersDetails(node.get("players"), matchId);
+    }
+    private void addPlayersDetails(JsonNode players, BigInteger matchId) {
+        Iterator<JsonNode> iterator = players.elements();
         while(iterator.hasNext()) {
-            JsonNode currentNode = iterator.next();
-            if(currentNode.has("players") && currentNode.get("players").isArray()) {
-                for(JsonNode player: currentNode.get("players")) {
-                    String playerName = currentNode.has("personaname") ? currentNode.get("personaname").asText() : "Anonymous";//some players are opted out from giving their info away, so we have to give them an anonymous name
-                    int heroId = currentNode.get("hero_id").asInt();
-                    boolean isRadiant = currentNode.get("isRadiant").asBoolean();
-                    int netWorth = currentNode.get("net_worth").asInt();
-                    int playerSlot = currentNode.get("player_slot").asInt();
-                    int kills = currentNode.get("kills").asInt();
-                    int deaths = currentNode.get("deaths").asInt();
-                    int assists = currentNode.get("assists").asInt();
-                    int heroLevel = currentNode.get("level").asInt();
-                    int heroDamage = currentNode.get("hero_damage").asInt();
-                    int towerDamage = currentNode.get("tower_damage").asInt();
-                    int item0Id = currentNode.get("item_0").asInt();
-                    int item1Id = currentNode.get("item_1").asInt();
-                    int item2Id = currentNode.get("item_2").asInt();
-                    int item3Id = currentNode.get("item_3").asInt();
-                    int item4Id = currentNode.get("item_4").asInt();
-                    int item5Id = currentNode.get("item_5").asInt();
-                    int backpack0Id = currentNode.get("backpack_0").asInt();
-                    int backpack1Id = currentNode.get("backpack_1").asInt();
-                    int backpack2Id = currentNode.get("backpack_2").asInt();
-                    int itemNeutral = currentNode.get("item_neutral").asInt();
+            JsonNode player = iterator.next();
 
-                }
-            }
+            String playerName = player.has("personaname") ? player.get("personaname").asText() : "Anonymous";//some players are opted out from giving their info away, so we have to give them an anonymous name
+            int heroId = player.get("hero_id").asInt();
+            boolean isRadiant = player.get("isRadiant").asBoolean();
+            int netWorth = player.get("net_worth").asInt();
+            int playerSlot = player.get("player_slot").asInt();
+            int kills = player.get("kills").asInt();
+            int deaths = player.get("deaths").asInt();
+            int assists = player.get("assists").asInt();
+            int heroLevel = player.get("level").asInt();
+            int heroDamage = player.get("hero_damage").asInt();
+            int towerDamage = player.get("tower_damage").asInt();
+            int item0Id = player.get("item_0").asInt();
+            int item1Id = player.get("item_1").asInt();
+            int item2Id = player.get("item_2").asInt();
+            int item3Id = player.get("item_3").asInt();
+            int item4Id = player.get("item_4").asInt();
+            int item5Id = player.get("item_5").asInt();
+            int backpack0Id = player.get("backpack_0").asInt();
+            int backpack1Id = player.get("backpack_1").asInt();
+            int backpack2Id = player.get("backpack_2").asInt();
+            int itemNeutral = player.get("item_neutral").asInt();
+
+            PlayerMatchDetailsDTO playerMatchDetailsDTO = new PlayerMatchDetailsDTO();
+            playerMatchDetailsDTO.setMatchId(matchId);
+            playerMatchDetailsDTO.setPlayerName(playerName);
+            playerMatchDetailsDTO.setHeroId(heroId);
+            playerMatchDetailsDTO.setRadiant(isRadiant);
+            playerMatchDetailsDTO.setNetWorth(netWorth);
+            playerMatchDetailsDTO.setPlayerSlot(playerSlot);
+            playerMatchDetailsDTO.setKills(kills);
+            playerMatchDetailsDTO.setDeaths(deaths);
+            playerMatchDetailsDTO.setAssists(assists);
+            playerMatchDetailsDTO.setHeroLevel(heroLevel);
+            playerMatchDetailsDTO.setHeroDamage(heroDamage);
+            playerMatchDetailsDTO.setTowerDamage(towerDamage);
+            playerMatchDetailsDTO.setItem0Id(item0Id);
+            playerMatchDetailsDTO.setItem1Id(item1Id);
+            playerMatchDetailsDTO.setItem2Id(item2Id);
+            playerMatchDetailsDTO.setItem3Id(item3Id);
+            playerMatchDetailsDTO.setItem4Id(item4Id);
+            playerMatchDetailsDTO.setItem5Id(item5Id);
+            playerMatchDetailsDTO.setBackpack0Id(backpack0Id);
+            playerMatchDetailsDTO.setBackpack1Id(backpack1Id);
+            playerMatchDetailsDTO.setBackpack2Id(backpack2Id);
+            playerMatchDetailsDTO.setItemNeutral(itemNeutral);
+            dota2Repo.addPlayerDetails(playerMatchDetailsDTO);
         }
     }
-
 }
+
