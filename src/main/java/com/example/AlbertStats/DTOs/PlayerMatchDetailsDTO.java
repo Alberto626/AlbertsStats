@@ -50,7 +50,7 @@ public class PlayerMatchDetailsDTO {//This object is from api call about match d
         this.playerName = playerName;
     }
 
-    public int getHeroName() {
+    public int getHeroId() {
         return heroId;
     }
 
@@ -210,32 +210,4 @@ public class PlayerMatchDetailsDTO {//This object is from api call about match d
         this.itemNeutral = itemNeutral;
     }
 
-    @Override
-    public String toString() {
-        return "PlayerMatchDetailsDTO{" +
-                "id=" + id +
-                ", matchId=" + matchId +
-                ", playerName='" + playerName + '\'' +
-                ", heroId=" + heroId +
-                ", isRadiant=" + isRadiant +
-                ", netWorth=" + netWorth +
-                ", playerSlot=" + playerSlot +
-                ", kills=" + kills +
-                ", deaths=" + deaths +
-                ", assists=" + assists +
-                ", heroLevel=" + heroLevel +
-                ", heroDamage=" + heroDamage +
-                ", towerDamage=" + towerDamage +
-                ", item0Id=" + item0Id +
-                ", item1Id=" + item1Id +
-                ", item2Id=" + item2Id +
-                ", item3Id=" + item3Id +
-                ", item4Id=" + item4Id +
-                ", item5Id=" + item5Id +
-                ", backpack0Id=" + backpack0Id +
-                ", backpack1Id=" + backpack1Id +
-                ", backpack2Id=" + backpack2Id +
-                ", itemNeutral=" + itemNeutral +
-                '}';
-    }
 }

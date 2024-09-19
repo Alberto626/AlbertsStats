@@ -5,6 +5,7 @@ import com.example.AlbertStats.Entities.Hero;
 import com.example.AlbertStats.Entities.Item;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -40,6 +41,9 @@ public class DotaDataComparisonService {
         for(Item item: readJsonFilesService.getItems()) {
             dota2Repo.replaceItem(item);
         }
+    }
+    public boolean doesMatchRecordExist(BigInteger matchId) {
+        return dota2Repo.doesMatchExist(matchId);
     }
     public boolean hasHeroRecords() { //THis is supposed to check if any records at all in the database because
         return hasHeroRecords();

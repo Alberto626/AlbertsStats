@@ -31,13 +31,12 @@ public class DotaApiReadingService {
         this.playerID = playerID;
         this.dota2Repo = dota2Repo;
     }
-    public List<BigInteger> readAllMatches() {//get all match ids
+    public List<BigInteger> getAllMatchesIds() {//get all match ids from api call from opendota
         try {
             ResponseEntity<String> response = restTemplate
                     .getForEntity("https://api.opendota.com/api/players/" + playerID +"/matches", String.class);
             JsonNode node = new ObjectMapper().readTree(response.getBody());
             List<BigInteger> matchIDs = getAllMatchesIDs(node.elements());
-            logger.info("" +matchIDs.size());
             return matchIDs;
         }
         catch (JsonMappingException e) {//TODO what to do with these exceptions
@@ -56,7 +55,7 @@ public class DotaApiReadingService {
         }
         return stack;
     }
-    public void readMatchDetails(BigInteger matchId) {//TODO parameter might be either string or long
+    public void readAndWriteMatchDetails(BigInteger matchId) {//this will read from our http request, and write to database
         try {
             ResponseEntity<String> response =restTemplate
                     .getForEntity("https://api.opendota.com/api/matches/" + matchId, String.class);
@@ -76,7 +75,7 @@ public class DotaApiReadingService {
             logger.info("rest template exception" + e);
         }
     }
-    private void addMatchDetails(JsonNode node, BigInteger matchId) {//this will map all the details of our response to mysql
+    private void addMatchDetails(JsonNode node, BigInteger matchId) {//this will map all the details of our response to mysql,
         MatchDetails matchDetails = new MatchDetails();
         int duration = node.get("duration").asInt();
         boolean radiantVictory = node.get("radiant_win").asBoolean();
@@ -87,6 +86,7 @@ public class DotaApiReadingService {
         dota2Repo.addMatchDetails(matchDetails);
 
         addPlayersDetails(node.get("players"), matchId);
+        logger.info("Successful match: " + matchId);
     }
     private void addPlayersDetails(JsonNode players, BigInteger matchId) {
         Iterator<JsonNode> iterator = players.elements();
