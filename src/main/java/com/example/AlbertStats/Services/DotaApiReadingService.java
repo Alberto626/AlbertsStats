@@ -1,6 +1,6 @@
 package com.example.AlbertStats.Services;
 
-import com.example.AlbertStats.DTOs.PlayerMatchDetailsDTO;
+import com.example.AlbertStats.Entities.PlayerMatchDetails;
 import com.example.AlbertStats.Entities.MatchDetails;
 import com.example.AlbertStats.Repository.Dota2Repo;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -115,30 +115,30 @@ public class DotaApiReadingService {
             int backpack2Id = player.get("backpack_2").asInt();
             int itemNeutral = player.get("item_neutral").asInt();
 
-            PlayerMatchDetailsDTO playerMatchDetailsDTO = new PlayerMatchDetailsDTO();
-            playerMatchDetailsDTO.setMatchId(matchId);
-            playerMatchDetailsDTO.setPlayerName(playerName);
-            playerMatchDetailsDTO.setHeroId(heroId);
-            playerMatchDetailsDTO.setRadiant(isRadiant);
-            playerMatchDetailsDTO.setNetWorth(netWorth);
-            playerMatchDetailsDTO.setPlayerSlot(playerSlot);
-            playerMatchDetailsDTO.setKills(kills);
-            playerMatchDetailsDTO.setDeaths(deaths);
-            playerMatchDetailsDTO.setAssists(assists);
-            playerMatchDetailsDTO.setHeroLevel(heroLevel);
-            playerMatchDetailsDTO.setHeroDamage(heroDamage);
-            playerMatchDetailsDTO.setTowerDamage(towerDamage);
-            playerMatchDetailsDTO.setItem0Id(item0Id);
-            playerMatchDetailsDTO.setItem1Id(item1Id);
-            playerMatchDetailsDTO.setItem2Id(item2Id);
-            playerMatchDetailsDTO.setItem3Id(item3Id);
-            playerMatchDetailsDTO.setItem4Id(item4Id);
-            playerMatchDetailsDTO.setItem5Id(item5Id);
-            playerMatchDetailsDTO.setBackpack0Id(backpack0Id);
-            playerMatchDetailsDTO.setBackpack1Id(backpack1Id);
-            playerMatchDetailsDTO.setBackpack2Id(backpack2Id);
-            playerMatchDetailsDTO.setItemNeutral(itemNeutral);
-            dota2Repo.addPlayerDetails(playerMatchDetailsDTO);
+            PlayerMatchDetails playerMatchDetails = new PlayerMatchDetails();
+            playerMatchDetails.setMatchId(matchId);
+            playerMatchDetails.setPlayerName(playerName);
+            playerMatchDetails.setHeroId(heroId);
+            playerMatchDetails.setRadiant(isRadiant);
+            playerMatchDetails.setNetWorth(netWorth);
+            playerMatchDetails.setPlayerSlot(playerSlot);
+            playerMatchDetails.setKills(kills);
+            playerMatchDetails.setDeaths(deaths);
+            playerMatchDetails.setAssists(assists);
+            playerMatchDetails.setHeroLevel(heroLevel);
+            playerMatchDetails.setHeroDamage(heroDamage);
+            playerMatchDetails.setTowerDamage(towerDamage);
+            playerMatchDetails.setItem0Id(item0Id);
+            playerMatchDetails.setItem1Id(item1Id);
+            playerMatchDetails.setItem2Id(item2Id);
+            playerMatchDetails.setItem3Id(item3Id);
+            playerMatchDetails.setItem4Id(item4Id);
+            playerMatchDetails.setItem5Id(item5Id);
+            playerMatchDetails.setBackpack0Id(backpack0Id);
+            playerMatchDetails.setBackpack1Id(backpack1Id);
+            playerMatchDetails.setBackpack2Id(backpack2Id);
+            playerMatchDetails.setItemNeutral(itemNeutral);
+            dota2Repo.addPlayerDetails(playerMatchDetails);
         }
     }
 }

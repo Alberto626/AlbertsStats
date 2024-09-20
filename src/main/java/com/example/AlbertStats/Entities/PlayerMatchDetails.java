@@ -1,7 +1,7 @@
-package com.example.AlbertStats.DTOs;
+package com.example.AlbertStats.Entities;
 
 import java.math.BigInteger;
-public class PlayerMatchDetailsDTO {//This object is from api call about match details,
+public class PlayerMatchDetails {//This object is from api call about match details,
     private BigInteger id;
     private BigInteger matchId;//TODO check if this needs changing
     private String playerName;
