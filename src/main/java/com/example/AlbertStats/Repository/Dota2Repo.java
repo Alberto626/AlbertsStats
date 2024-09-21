@@ -148,12 +148,12 @@ public class Dota2Repo implements BasicRepository {
             String sql = "Select match_details.id, match_details.match_id, match_details.radiant_victory, match_details.match_duration_seconds,\n" +
                     "\tplayer_match_details.id as player_id, player_match_details.player_name, player_match_details.is_radiant, player_match_details.net_worth, player_match_details.player_slot, player_match_details.kills, player_match_details.deaths, player_match_details.assists, player_match_details.hero_level, player_match_details.hero_damage, player_match_details.tower_damage,\n" +
                     "\theroes.id as hero_id, heroes.name as hero_name, heroes.primary_attribute, heroes.roles,\n" +
-                    "    item0.id as item0_id, item0.name as item0_name, item0.description as item0_description, item0.cost as item0cost,\n" +
-                    "    item1.id as item1_id, item1.name as item1_name, item1.description as item1_description, item1.cost as item1cost,\n" +
-                    "    item2.id as item0_id, item2.name as item2_name, item2.description as item2_description, item2.cost as item2cost,\n" +
-                    "    item3.id as item0_id, item3.name as item3_name, item3.description as item3_description, item3.cost as item3cost,\n" +
-                    "    item4.id as item0_id, item4.name as item4_name, item4.description as item4_description, item4.cost as item4cost,\n" +
-                    "    item5.id as item5_id, item5.name as item5_name, item5.description as item5_description, item5.cost as item5cost,\n" +
+                    "    item0.id as item0_id, item0.name as item0_name, item0.description as item0_description, item0.cost as item0_cost,\n" +
+                    "    item1.id as item1_id, item1.name as item1_name, item1.description as item1_description, item1.cost as item1_cost,\n" +
+                    "    item2.id as item2_id, item2.name as item2_name, item2.description as item2_description, item2.cost as item2_cost,\n" +
+                    "    item3.id as item3_id, item3.name as item3_name, item3.description as item3_description, item3.cost as item3_cost,\n" +
+                    "    item4.id as item4_id, item4.name as item4_name, item4.description as item4_description, item4.cost as item4_cost,\n" +
+                    "    item5.id as item5_id, item5.name as item5_name, item5.description as item5_description, item5.cost as item5_cost,\n" +
                     "    backpack0.id as backpack0_id, backpack0.name as backpack0_name, backpack0.description as backpack0_description, backpack0.cost as backpack0_cost,\n" +
                     "    backpack1.id as backpack1_id, backpack1.name as backpack1_name, backpack1.description as backpack1_description, backpack1.cost as backpack1_cost,\n" +
                     "    backpack2.id as backpack2_id, backpack2.name as backpack2_name, backpack2.description as backpack2_description, backpack2.cost as backpack2_cost,\n" +
@@ -177,7 +177,7 @@ public class Dota2Repo implements BasicRepository {
             return list;
         }
         catch(DataAccessException e) {//TODO might need to throw a 404
-            logger.info("No pages here");
+            logger.info("No pages here: " + e);
         }
         return null;
     }

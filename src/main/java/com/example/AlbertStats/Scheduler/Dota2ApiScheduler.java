@@ -34,7 +34,6 @@ public class Dota2ApiScheduler {//Basic concept, still not finished
     public void updateItemsToDatabase() {//Read from my json file and update to the mysql database
         dotaDataComparisonService.updateItems();
     }
-    @PostConstruct //this needs to be scheduled
     public void updateMatchDetails() {
         Stack<BigInteger> stack = new Stack<>();
         stack.addAll(dotaApiReadingService.getAllMatchesIds());
