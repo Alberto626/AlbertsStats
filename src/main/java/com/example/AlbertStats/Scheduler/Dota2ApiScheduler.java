@@ -3,6 +3,7 @@ package com.example.AlbertStats.Scheduler;
 import com.example.AlbertStats.Services.DotaApiReadingService;
 import com.example.AlbertStats.Services.DotaDataComparisonService;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -35,6 +36,7 @@ public class Dota2ApiScheduler {//Basic concept, still not finished
         dotaDataComparisonService.updateItems();
     }
     @Scheduled(cron = "0 1 1 * * ?")
+    @PostConstruct
     public void updateMatchDetails() {
         Stack<BigInteger> stack = new Stack<>();
         stack.addAll(dotaApiReadingService.getAllMatchesIds());
