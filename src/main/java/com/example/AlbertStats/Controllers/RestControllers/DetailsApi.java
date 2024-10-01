@@ -17,7 +17,7 @@ public class DetailsApi {//for now this is the base idea of what is going on
     }
 
     @GetMapping("/bankai/{page}")
-    public List<PlayerDetailsDTO> world(@PathVariable("page") int page) {
+    public List<PlayerDetailsDTO> world(@PathVariable("page") int page) {//TODO figure out a better way to present data
         List<PlayerDetailsDTO> list = dota2Repo.getAllMatchDetails(page);
         return list;
     }

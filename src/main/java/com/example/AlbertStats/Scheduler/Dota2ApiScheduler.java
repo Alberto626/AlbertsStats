@@ -1,10 +1,9 @@
 package com.example.AlbertStats.Scheduler;
 
-import com.example.AlbertStats.Repository.Dota2Repo;
 import com.example.AlbertStats.Services.DotaApiReadingService;
 import com.example.AlbertStats.Services.DotaDataComparisonService;
-import jakarta.annotation.PostConstruct;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
@@ -14,6 +13,7 @@ import java.util.logging.Logger;
 
 
 @Component //TODO this might be a service
+
 public class Dota2ApiScheduler {//Basic concept, still not finished
 
     private final DotaDataComparisonService dotaDataComparisonService;
@@ -26,14 +26,15 @@ public class Dota2ApiScheduler {//Basic concept, still not finished
         this.dotaDataComparisonService = dotaDataComparisonService;
         this.dotaApiReadingService = dotaApiReadingService;
     }
-
+    @Scheduled(cron = "0 1 1 * * ?") //once a day at 101 am
     public void updateHeroesToDatabase() {//update heroes to our database every once in a while
         dotaDataComparisonService.updateHeroes();
     }
-
+    @Scheduled(cron = "0 1 1 * * ?")
     public void updateItemsToDatabase() {//Read from my json file and update to the mysql database
         dotaDataComparisonService.updateItems();
     }
+    @Scheduled(cron = "0 1 1 * * ?")
     public void updateMatchDetails() {
         Stack<BigInteger> stack = new Stack<>();
         stack.addAll(dotaApiReadingService.getAllMatchesIds());
@@ -42,12 +43,12 @@ public class Dota2ApiScheduler {//Basic concept, still not finished
             stack.pop();
         }
         while(!stack.isEmpty()) {
-            BigInteger matchId = stack.pop();
-            if(!dotaDataComparisonService.doesMatchRecordExist(matchId)) { //if the match records exists, then we dont need to make the http request, if it does then make the call and add to our database
-                dotaApiReadingService.readAndWriteMatchDetails(matchId);//add to match and player details, this will ignore matches will give an error like 404
-            }
             try {
-                TimeUnit.SECONDS.sleep(10);// wait at least 10 seconds because of the limitations of opendota api
+                BigInteger matchId = stack.pop();
+                if(!dotaDataComparisonService.doesMatchRecordExist(matchId)) { //if the match records exists, then we dont need to make the http request, if it does then make the call and add to our database
+                    dotaApiReadingService.readAndWriteMatchDetails(matchId);//add to match and player details, this will ignore matches will give an error like 404
+                    TimeUnit.SECONDS.sleep(10);// wait at least 10 seconds because of the limitations of opendota api
+                }
             } catch (InterruptedException ie) {
                 Thread.currentThread().interrupt();
             }
